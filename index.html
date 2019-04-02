@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Title</title>
+
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.min.js"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.min.css" rel="stylesheet" type="text/css">
+
+  <script type="text/javascript" src="pages_200.js"></script>
+  <script type="text/javascript" src="links_200.js"></script>
+
+  <style type="text/css">
+    #mynetwork {
+      width: 90vw;
+      height: 90vh;
+      border: 1px solid black;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="mynetwork">
+    <div class="vis-network" tabindex="900"
+      style="position: relative; overflow: hidden; touch-action: pan-y; user-select: none; -webkit-user-drag: none; -webkit-tap-highlight-color: rgba(0, 0, 0, 0); width: 100%; height: 100%;">
+      <canvas width="90vw" height="90vh"
+        style="position: relative; touch-action: none; user-select: none; -webkit-user-drag: none; -webkit-tap-highlight-color: rgba(0, 0, 0, 0); width: 100%; height: 100%;"></canvas>
+    </div>
+  </div>
+
+  <script type="text/javascript">
+    // create an array with nodes
+
+    var nodes = new vis.DataSet(pages);
+
+    // create an array with edges
+    var edges = new vis.DataSet(links);
+
+    console.log("pages:", pages.length, "links:", links.length);
+
+    // create a network
+    var container = document.getElementById('mynetwork');
+    var data = {
+      nodes: nodes,
+      edges: edges
+    };
+    var options = {
+      layout: {
+        improvedLayout: true,
+        hierarchical: {
+          enabled: false,
+          treeSpacing: 500,
+          nodeSpacing: 500,
+          blockShifting: true,
+          edgeMinimization: true,
+          parentCentralization: true,
+          direction: 'UD',        // UD, DU, LR, RL
+          sortMethod: 'hubsize'   // hubsize, directed
+        }
+      },
+      physics: {
+        enabled: true,
+        maxVelocity: 50,
+        minVelocity: 0.1,
+        stabilization: {
+          enabled: true,
+          iterations: 5000,
+          updateInterval: 25
+        }
+      },
+      edges: {
+        // arrows: {
+        //   to: { enabled: false, scaleFactor: 1 },
+        //   middle: { enabled: false, scaleFactor: 1 },
+        //   from: { enabled: false, scaleFactor: 1 }
+        // },
+        // color: {
+        //   color: '#848484',
+        //   highlight: '#848484',
+        //   hover: '#848484',
+        // },
+        // font: {
+        //   color: '#343434',
+        //   size: 11, // px
+        //   face: 'arial',
+        //   background: 'none',
+        //   strokeWidth: 5, // px
+        //   strokeColor: '#ffffff',
+        //   align: 'vertical'
+        // },
+        smooth: {
+          enabled: false, //setting to true enables curved lines
+          //type: "dynamic",
+          //roundness: 0.5
+        },
+      }
+    }
+    var network = new vis.Network(container, data, options);
+
+    network.on("stabilizationIterationsDone", function () {
+      network.setOptions({ physics: false });
+    });
+
+  </script>
+
+</body>
+
+</html>
